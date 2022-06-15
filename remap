@@ -1,0 +1,24 @@
+#!/bin/zsh
+
+. ~/.dotfiles
+
+US="qwertyuiopasdfghjklzxcvbnm"
+CO="qwfpgjluy;arstdhneizxcvbkm"
+
+replace() {
+  result=""
+  for i in {1..${#1}}; do
+    sym=${1[$i]}
+    sub=${CO%%${sym}*}x
+    idx=${#sub}
+    result="${result}${US[$idx]}"
+  done
+
+  echo $result
+}
+
+if $DOTFILES/xkbswitch-macosx/bin/xkbswitch -ge | grep Colemak > /dev/null 2>&1; then
+  replace $1
+else
+  echo $1
+fi
