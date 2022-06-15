@@ -1,3 +1,1 @@
 #!/bin/zsh
-
-echo -n "red" | nc -4u -w0 localhost 1738

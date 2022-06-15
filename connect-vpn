@@ -1,0 +1,39 @@
+#!/bin/bash
+
+cd $(dirname $0)
+
+ANYDIR=$(pwd)
+ICODIR=$(echo ${ANYDIR#*/} | tr '/' ':')
+VPNUSER=$(test -e auth && head -1 auth)
+
+if [ -z "${VPNUSER}" ]; then
+  result=$(osascript -e "display dialog \"VPN username:\" with title \"AnyVPN\" with icon file \"${ICODIR}:user.png\" default answer \"\" buttons {\"Cancel\", \"Continue\"} default button \"Continue\"")
+  if echo $result | grep 'Continue' > /dev/null 2>&1; then
+    VPNUSER=$(echo $result | cut -d: -f3)
+  else
+    exit
+  fi
+fi
+
+echo $VPNUSER > auth
+
+kbd_history=$(defaults read ~/Library/Preferences/com.apple.HIToolbox.plist AppleInputSourceHistory | grep Name | head -2 | cut -d= -f2 | sort -r | tr -d ' .";')
+xkbswitch-macosx/bin/xkbswitch -se US
+result=$(osascript -e "display dialog \"VPN password:\" with title \"AnyVPN\" with icon file \"${ICODIR}:pass.png\" default answer \"\" buttons {\"Cancel\", \"Continue\"} default button \"Continue\" with hidden answer")
+for name in "$kbd_history"; do xkbswitch-macosx/bin/xkbswitch -se $name; done
+
+if echo $result | grep 'Continue' > /dev/null 2>&1; then
+  echo $result | cut -d: -f3 >> auth
+else
+  exit
+fi
+
+sudo /usr/local/opt/openvpn/sbin/openvpn \
+  --config $ANYDIR/config.ovpn \
+  --script-security 2 \
+  --daemon \
+  --log $ANYDIR/openvpn.log \
+  --route-up $ANYDIR/up \
+  --down $ANYDIR/down \
+  --auth-user-pass $ANYDIR/auth \
+  --management $ANYDIR/socket unix

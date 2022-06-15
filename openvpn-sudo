@@ -1,1 +1,0 @@
-key ALL = NOPASSWD: /usr/local/opt/openvpn/sbin/openvpn
