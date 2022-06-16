@@ -2,7 +2,7 @@ WORKDIR := $(shell pwd)
 
 all: disconnect connect
 
-start: /Applications/xbar.app
+start:
 	open /Applications/xbar.app
 
 stop:
@@ -10,13 +10,13 @@ stop:
 
 restart: stop start
 
-connect:
+connect: disconnect
 	./connect-vpn
 
 disconnect:
-	@echo "signal SIGTERM" | nc -U socket
+	@echo "signal SIGTERM" | nc -U socket || true
 
-install: xkbswitch-macosx
+install: xkbswitch-macosx /Applications/xbar.app
 	sed s:__workdir__:$(WORKDIR): xbar-vpn-plugin > ~/Library/Application\ Support/xbar/plugins/openvpn.5s.sh
 	chmod a+x ~/Library/Application\ Support/xbar/plugins/openvpn.5s.sh
 	@test -e socket || touch socket
@@ -32,7 +32,10 @@ update_sudoers:
 	@echo "$(USER) ALL = (ALL) NOPASSWD: /usr/local/opt/openvpn/sbin/openvpn" | sudo tee -a /etc/sudoers
 
 check-runned:
-	@(grep "Initialization Sequence Completed" openvpn.log > /dev/null 2>&1 && echo "verb 0" || echo "pid") | nc -U socket
+	@echo "state all" | nc -U socket | grep CONNECTING
 
 check-connected:
-	@echo "load-stats" | nc -U socket | grep "bytesin=[1-9]*"
+	@echo "state all" | nc -U socket | grep CONNECTED
+
+state:
+	@echo "state all" | nc -U socket | tail -2 | head -1 | cut -d, -f2

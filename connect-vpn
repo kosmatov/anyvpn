@@ -11,7 +11,7 @@ if [ -z "${VPNUSER}" ]; then
   VPNUSER=$(echo $result | cut -d: -f3)
 fi
 
-VPNPASS=$(test -e auth && tail -1 auth)
+VPNPASS=$(test -e auth && sed -n '2p' auth)
 if [ -z "$VPNPASS" ]; then
   kbd_history=$(defaults read ~/Library/Preferences/com.apple.HIToolbox.plist AppleInputSourceHistory | grep Name | head -2 | cut -d= -f2 | sort -r | tr -d ' .";')
   xkbswitch-macosx/bin/xkbswitch -se US
