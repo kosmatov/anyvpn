@@ -18,7 +18,7 @@ disconnect:
 	@echo "signal SIGTERM" | nc -U socket || true
 
 install: xkbswitch-macosx /Applications/xbar.app
-	sed s:__workdir__:$(WORKDIR): xbar-vpn-plugin > ~/Library/Application\ Support/xbar/plugins/openvpn.5s.sh
+	sed s:__workdir__:$(WORKDIR):g xbar-vpn-plugin > ~/Library/Application\ Support/xbar/plugins/openvpn.5s.sh
 	chmod a+x ~/Library/Application\ Support/xbar/plugins/openvpn.5s.sh
 	@test -e socket || touch socket
 	@sudo grep $(USER) /etc/sudoers | grep openvpn > /dev/null 2>&1 || make update_sudoers
@@ -37,6 +37,9 @@ check-runned:
 
 check-connected:
 	@echo "state all" | nc -U socket | grep CONNECTED
+
+check-password-need:
+	@echo "" | nc -U socket | grep -o PASSWORD
 
 state:
 	@echo "state all" | nc -U socket | tail -2 | head -1 | cut -d, -f2

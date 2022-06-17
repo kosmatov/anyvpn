@@ -28,7 +28,9 @@ case "$state" in
     echo " | templateImage=$IMAGE_CONNECTED"
     echo '---'
     echo "Disconnect VPN | bash='$0' param1=disconnect terminal=false refresh=true"
-    exit
+    ;;
+  AUTH)
+    make -C __workdir__ check-password-need > /dev/null 2>&1 && make -C __workdir__ connect
     ;;
   "")
     echo " | templateImage=$IMAGE_DISCONNECTED"
@@ -39,5 +41,6 @@ case "$state" in
     echo " | templateImage=$IMAGE_CONNECTING"
     echo '---'
     echo "$state..."
+    echo "Reconnect VPN | bash='$0' param1=connect terminal=false refresh=true"
     ;;
 esac

@@ -8,7 +8,12 @@ ICODIR=$(echo ${ANYDIR#*/} | tr '/' ':')
 VPNUSER=$(test -e auth && head -1 auth)
 if [ -z "${VPNUSER}" ]; then
   result=$(osascript -e "display dialog \"VPN username:\" with title \"AnyVPN\" with icon file \"${ICODIR}:user.png\" default answer \"\" buttons {\"Cancel\", \"Continue\"} default button \"Continue\"")
-  VPNUSER=$(echo $result | cut -d: -f3)
+
+  if echo $result | grep Continue; then
+    VPNUSER=$(echo $result | cut -d: -f3)
+  else
+    exit
+  fi
 fi
 
 VPNPASS=$(test -e auth && sed -n '2p' auth)
@@ -20,7 +25,11 @@ if [ -z "$VPNPASS" ]; then
 
   for name in "$kbd_history"; do xkbswitch-macosx/bin/xkbswitch -se $name; done
 
-  VPNPASS=$(echo $result | cut -d: -f3)
+  if echo $result | grep Continue; then
+    VPNPASS=$(echo $result | cut -d: -f3)
+  else
+    exit
+  fi
 fi
 
 sudo /usr/local/opt/openvpn/sbin/openvpn \
