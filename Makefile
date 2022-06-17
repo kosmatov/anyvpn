@@ -14,6 +14,7 @@ connect: disconnect
 	./connect-vpn
 
 disconnect:
+	@rm connected || true
 	@echo "signal SIGTERM" | nc -U socket || true
 
 install: xkbswitch-macosx /Applications/xbar.app

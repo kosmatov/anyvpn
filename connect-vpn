@@ -36,3 +36,5 @@ sudo /usr/local/opt/openvpn/sbin/openvpn \
 
 echo "username Auth $VPNUSER" | nc -U socket
 echo "password Auth $VPNPASS" | nc -U socket
+
+touch connected
