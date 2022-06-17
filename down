@@ -2,5 +2,3 @@
 
 WORKDIR=$(dirname $0)
 
-# reconnect on failure
-[ -e $WORKDIR/connected ] && make -C $WORKDIR connect
