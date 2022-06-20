@@ -15,10 +15,10 @@ IMAGE_CONNECTED="iVBORw0KGgoAAAANSUhEUgAAACwAAAAsCAYAAAAehFoBAAAABmJLR0QA/wD/AP+
 
 case "$1" in
   connect)
-    make -C __workdir__ connect
+    make -C __workdir__ connect > /dev/null 2>&1
     ;;
   disconnect)
-    make -C __workdir__ disconnect
+    make -C __workdir__ disconnect > /dev/null 2>&1
     ;;
 esac
 
@@ -30,7 +30,7 @@ case "$state" in
     echo "Disconnect VPN | bash='$0' param1=disconnect terminal=false refresh=true"
     ;;
   AUTH)
-    make -C __workdir__ check-password-need > /dev/null 2>&1 && make -C __workdir__ connect
+    make -C __workdir__ check-password-need > /dev/null 2>&1 && make -C __workdir__ connect > /dev/null 2>&1
     echo " | templateImage=$IMAGE_CONNECTING"
     echo '---'
     echo "$state..."
