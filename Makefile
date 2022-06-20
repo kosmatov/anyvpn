@@ -14,7 +14,6 @@ connect: disconnect
 	./connect-vpn
 
 disconnect:
-	@rm connected || true
 	@echo "signal SIGTERM" | nc -U socket || true
 
 install: xkbswitch-macosx /Applications/xbar.app
@@ -42,4 +41,4 @@ check-password-need:
 	@echo "" | nc -U socket | grep -o PASSWORD
 
 state:
-	@echo "state all" | nc -U socket | tail -2 | head -1 | cut -d, -f2
+	@echo "state all" | nc -U socket | grep "[0-9]*,[A-Z]*" | tail -1 | cut -d, -f2
