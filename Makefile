@@ -16,11 +16,14 @@ connect: disconnect
 disconnect:
 	@echo "signal SIGTERM" | nc -U socket || true
 
-install: xkbswitch-macosx /Applications/xbar.app
+install: xkbswitch-macosx /Applications/xbar.app /usr/local/opt/openvpn/sbin/openvpn
 	sed s:__workdir__:$(WORKDIR):g xbar-vpn-plugin > ~/Library/Application\ Support/xbar/plugins/openvpn.5s.sh
 	chmod a+x ~/Library/Application\ Support/xbar/plugins/openvpn.5s.sh
 	@test -e socket || touch socket
 	@sudo grep $(USER) /etc/sudoers | grep openvpn > /dev/null 2>&1 || make update_sudoers
+
+/usr/local/opt/openvpn/sbin/openvpn:
+	brew install openvpn
 
 xkbswitch-macosx:
 	git clone https://github.com/myshov/xkbswitch-macosx
