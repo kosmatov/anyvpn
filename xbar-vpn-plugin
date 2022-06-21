@@ -35,6 +35,7 @@ case "$state" in
     echo '---'
     echo "$state..."
     echo "Reconnect VPN | bash='$0' param1=connect terminal=false refresh=true"
+    echo "Disconnect VPN | bash='$0' param1=disconnect terminal=false refresh=true"
     ;;
   "")
     echo " | templateImage=$IMAGE_DISCONNECTED"
@@ -46,5 +47,6 @@ case "$state" in
     echo '---'
     echo "$state..."
     echo "Reconnect VPN | bash='$0' param1=connect terminal=false refresh=true"
+    echo "Disconnect VPN | bash='$0' param1=disconnect terminal=false refresh=true"
     ;;
 esac
