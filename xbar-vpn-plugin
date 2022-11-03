@@ -31,7 +31,7 @@ case "$state" in
     echo "Disconnect VPN | bash='$0' param1=disconnect terminal=false refresh=true"
     ;;
   AUTH)
-    make -C --silent __workdir__ check-password-need > /dev/null 2>&1 && make -C __workdir__ connect > /dev/null 2>&1
+    make --silent -C __workdir__ check-password-need > /dev/null 2>&1 && make -C __workdir__ connect > /dev/null 2>&1
     echo " | templateImage=$IMAGE_CONNECTING"
     echo '---'
     echo "$state..."
