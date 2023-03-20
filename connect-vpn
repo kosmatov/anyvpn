@@ -19,11 +19,11 @@ fi
 VPNPASS=$(test -e auth && sed -n '2p' auth)
 if [ -z "$VPNPASS" ]; then
   kbd_history=$(defaults read ~/Library/Preferences/com.apple.HIToolbox.plist AppleInputSourceHistory | grep Name | head -2 | cut -d= -f2 | sort -r | tr -d ' .";')
-  xkbswitch-macosx/bin/xkbswitch -se US
+  xkbswitch-macosx/xkbswitch -s com.apple.keylayout.US
 
   result=$(osascript -e "display dialog \"VPN password:\" with title \"AnyVPN\" with icon file \"${ICODIR}:pass.png\" default answer \"\" buttons {\"Cancel\", \"Continue\"} default button \"Continue\" with hidden answer")
 
-  for name in $kbd_history; do xkbswitch-macosx/bin/xkbswitch -se $name; done
+  for name in $kbd_history; do xkbswitch-macosx/xkbswitch -s com.apple.keylayout.$name; done
 
   if echo $result | grep Continue; then
     VPNPASS=$(echo $result | cut -d: -f3)
@@ -32,7 +32,7 @@ if [ -z "$VPNPASS" ]; then
   fi
 fi
 
-sudo /usr/local/opt/openvpn/sbin/openvpn \
+sudo /opt/homebrew/sbin/openvpn \
   --config $ANYDIR/config.ovpn \
   --script-security 2 \
   --daemon \
